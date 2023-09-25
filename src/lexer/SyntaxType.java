@@ -1,0 +1,19 @@
+package lexer;
+
+public enum SyntaxType
+{
+    SINGLE_ANNOTATION, MULTI_ANNOTATION,
+    MAINTK, CONSTTK, INTTK, BREAKTK, CONTINUETK, IFTK, ELSETK, FORTK, GETINTTK, PRINTFTK, RETURNTK, VOIDTK,
+    // delimiter
+    NOT, AND, OR, PLUS, MINU, MULT, DIV, MOD, LSS, LEQ, GRE, GEQ, EQL, NEQ,
+    ASSIGN, SEMICN, COMMA, SPACE,
+    LPARENT, RPARENT, LBRACK, RBRACK, LBRACE, RBRACE,
+    // IntConst
+    INTCON,
+    // FormatString
+    STRCON,
+    // Identifier
+    IDENFR,
+    EOF
+}
+
