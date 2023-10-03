@@ -28,4 +28,8 @@ public class Token {
     {
         return type.toString() + " " + value;
     }
+
+    public boolean equalType(SyntaxType type) {
+        return this.type == type;
+    }
 }

@@ -67,7 +67,12 @@ public class Lexer {
                 tokens.add(token);
             }
         }
+        tokens.add(new Token(SyntaxType.EOF, 0, null));
         return tokens;
+    }
+
+    public ArrayList<Token> getTokens() {
+        return this.tokens;
     }
 
     public void skipBlank() {
@@ -251,9 +256,8 @@ public class Lexer {
 
     public String display() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Token token : tokens)
-        {
-            stringBuilder.append(token).append("\n");
+        for (int i = 0; i < tokens.size() - 1; i++) {
+            stringBuilder.append(tokens.get(i)).append("\n");
         }
         return stringBuilder.toString();
     }

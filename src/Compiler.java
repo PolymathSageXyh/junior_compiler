@@ -1,4 +1,6 @@
 import lexer.Lexer;
+import paser.Node;
+import paser.Parser;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,8 +9,8 @@ import java.nio.file.StandardOpenOption;
 
 public class Compiler {
     public static void main(String[] args) {
-        String inFilePath = "src/testfile.txt"; // 文件路径
-        String outFilePath = "src/output.txt";
+        String inFilePath = "testfile.txt"; // 文件路径
+        String outFilePath = "output.txt";
         try {
             //System.out.println(Files.exists(Paths.get(filePath)));
             String fileContent = Files.readString(Path.of(inFilePath));
@@ -19,8 +21,11 @@ public class Compiler {
             //String fileContent = new String(Files.readAllBytes(path), charset);
             Lexer lexer = new Lexer(fileContent);
             lexer.run();
+            Parser parser = new Parser(lexer.getTokens());
+            Node root = parser.parseAll();
+
             // 输出文件内容
-            Files.write(Path.of(outFilePath), lexer.display().getBytes(), StandardOpenOption.CREATE);
+            Files.write(Path.of(outFilePath), root.getPaserLog().toString().getBytes(), StandardOpenOption.CREATE);
             //System.out.print(lexer.display());
         } catch (IOException e) {
             e.printStackTrace();
