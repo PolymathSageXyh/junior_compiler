@@ -1,5 +1,5 @@
 import lexer.Lexer;
-import paser.Node;
+import paser.nodes.Node;
 import paser.Parser;
 
 import java.io.IOException;

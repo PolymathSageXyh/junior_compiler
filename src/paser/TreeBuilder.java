@@ -1,6 +1,8 @@
 package paser;
 
 import lexer.SyntaxType;
+import paser.nodes.Node;
+import paser.nodes.TokenNode;
 
 import java.util.Stack;
 
