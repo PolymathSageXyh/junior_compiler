@@ -1,4 +1,4 @@
 package paser;
 
-public class ConstExpNode {
+public class ConstExpNode extends Node {
 }

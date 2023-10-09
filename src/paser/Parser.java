@@ -132,7 +132,7 @@ public class Parser {
     public void parseConstExp() {
         treeBuilder.buildNode(SyntaxType.CONST_EXP);
         parseAddExp();
-        treeBuilder.finishNode(new AddExpNode());
+        treeBuilder.finishNode(new ConstExpNode());
     }
 
     public void parseVarDecl() {
