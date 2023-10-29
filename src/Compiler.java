@@ -1,4 +1,8 @@
+import error.ErrorCheckContext;
+import error.ErrorCheckReturn;
+import error.ErrorType;
 import lexer.Lexer;
+import paser.Mypair;
 import paser.nodes.Node;
 import paser.Parser;
 
@@ -6,11 +10,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 
 public class Compiler {
     public static void main(String[] args) {
         String inFilePath = "testfile.txt"; // 文件路径
-        String outFilePath = "output.txt";
+        String outFilePath = "error.txt";
         try {
             //System.out.println(Files.exists(Paths.get(filePath)));
             String fileContent = Files.readString(Path.of(inFilePath));
@@ -23,9 +28,16 @@ public class Compiler {
             lexer.run();
             Parser parser = new Parser(lexer.getTokens());
             Node root = parser.parseAll();
-
+            //Files.write(Path.of(outFilePath), root.getPaserLog().toString().getBytes(), StandardOpenOption.CREATE);
+            ArrayList<Mypair<ErrorType, Integer>> errorList = new ArrayList<>();
+            root.checkError(errorList, new ErrorCheckContext(), new ErrorCheckReturn());
+            StringBuilder ss = new StringBuilder();
+            for(Mypair<ErrorType,Integer> i:errorList){
+                ss.append(i.second).append(" ").append(ErrorType.error2type(i.first)).append("\n");
+            }
             // 输出文件内容
-            Files.write(Path.of(outFilePath), root.getPaserLog().toString().getBytes(), StandardOpenOption.CREATE);
+
+            Files.write(Path.of(outFilePath), ss.toString().getBytes(), StandardOpenOption.CREATE);
             //System.out.print(lexer.display());
         } catch (IOException e) {
             e.printStackTrace();

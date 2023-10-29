@@ -1,6 +1,10 @@
 package paser.nodes;
 
+import error.ErrorCheckContext;
+import error.ErrorCheckReturn;
+import error.ErrorType;
 import lexer.SyntaxType;
+import paser.Mypair;
 
 import java.util.ArrayList;
 
@@ -49,4 +53,11 @@ public class Node {
         this.startLine = children.get(0).startLine;
         this.endLine = children.get(children.size() - 1).endLine;
     }
+
+    public void checkError(ArrayList<Mypair<ErrorType, Integer>> errorList, ErrorCheckContext ctx, ErrorCheckReturn ret) {
+        for (Node child : children) {
+            child.checkError(errorList, ctx, ret);
+        }
+    }
+
 }

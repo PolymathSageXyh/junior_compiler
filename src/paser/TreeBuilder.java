@@ -1,9 +1,10 @@
 package paser;
 
 import lexer.SyntaxType;
+import paser.nodes.ErrorNode;
 import paser.nodes.Node;
 import paser.nodes.TokenNode;
-
+import error.ErrorType;
 import java.util.Stack;
 
 public class TreeBuilder {
@@ -49,6 +50,12 @@ public class TreeBuilder {
             System.out.println("Parent is not empty, go error!\n");
             return children.peek();
         }
+    }
+
+    public void addErrorNode(ErrorType errorType, int line) {
+        Node node = new ErrorNode(errorType, line);
+        node.setLeafNode(SyntaxType.ERROR, line);
+        children.push(node);
     }
 
 

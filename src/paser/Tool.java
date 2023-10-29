@@ -19,6 +19,11 @@ public class Tool {
         pointer += 1;
     }
 
+    public int lastTokenLine() {
+        if (pointer == 0) return 0;
+        else return lookAhead(-1).getEmergeLine();
+    }
+
     public Token lookAhead(int step) {
         if (pointer + step < tokens.size() && pointer + step >= 0) {
             return tokens.get(pointer + step);

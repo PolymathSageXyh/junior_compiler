@@ -1,5 +1,6 @@
 package paser;
 
+import error.ErrorType;
 import lexer.SyntaxType;
 import lexer.Token;
 import paser.nodes.*;
@@ -62,7 +63,8 @@ public class Parser {
         while (tool.isInt()) {
             parseFuncFParams();
         }
-        terminalSymbol(); //)
+        //terminalSymbol(); //)
+        checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
         parseBlock();
         treeBuilder.finishNode(new FuncDefNode());
     }
@@ -72,7 +74,8 @@ public class Parser {
         terminalSymbol(); //int
         terminalSymbol(); //main
         terminalSymbol(); //(
-        terminalSymbol(); //)
+        //terminalSymbol(); //)
+        checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
         parseBlock();
         treeBuilder.finishNode(new MainFuncDefNode());
     }
@@ -86,7 +89,8 @@ public class Parser {
             terminalSymbol(); //,
             parseConstDef();
         }
-        terminalSymbol();//;
+        //terminalSymbol();//;
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new ConstDeclNode());
     }
 
@@ -97,7 +101,8 @@ public class Parser {
         while (tool.isLBrack()) {
             terminalSymbol(); // [
             parseConstExp();
-            terminalSymbol(); //]
+            //terminalSymbol(); //]
+            checkToken(SyntaxType.RBRACK, ErrorType.RBRACK_MISSING);
         }
         terminalSymbol();// =
         parseConstInitVal();
@@ -144,7 +149,8 @@ public class Parser {
             terminalSymbol(); //,
             parseVarDef();
         }
-        terminalSymbol(); //;
+        //terminalSymbol(); //;
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new VarDeclNode());
     }
 
@@ -154,7 +160,8 @@ public class Parser {
         while (tool.isLBrack()) {
             terminalSymbol(); //[
             parseConstExp();
-            terminalSymbol();
+            //terminalSymbol();
+            checkToken(SyntaxType.RBRACK, ErrorType.RBRACK_MISSING);
         }
         if (tool.isAssign()) {
             terminalSymbol();
@@ -211,11 +218,13 @@ public class Parser {
         terminalSymbol(); //ident
         if(tool.isLBrack()){
             terminalSymbol(); //[
-            terminalSymbol(); //]
+            //terminalSymbol(); //]
+            checkToken(SyntaxType.RBRACK, ErrorType.RBRACK_MISSING);
             while(tool.isLBrack()) {
                 terminalSymbol();
                 parseConstExp();
-                terminalSymbol();
+                //terminalSymbol();
+                checkToken(SyntaxType.RBRACK, ErrorType.RBRACK_MISSING);
             }
         }
         treeBuilder.finishNode(new FuncFParamNode());
@@ -325,7 +334,8 @@ public class Parser {
         while (tool.isLBrack()) {
             terminalSymbol(); //[
             parseExp();
-            terminalSymbol(); //]
+            //terminalSymbol(); //]
+            checkToken(SyntaxType.RBRACK, ErrorType.RBRACK_MISSING);
         }
         treeBuilder.finishNode(new LValNode());
     }
@@ -369,9 +379,11 @@ public class Parser {
                     terminalSymbol();
                 } else if (SyntaxType.expFirst(tool.getSyntaxTypeOfFirstToken())) {
                     parseFuncRParams();
-                    terminalSymbol(); //)
+                    //terminalSymbol(); //)
+                    checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
                 } else {
-                    System.out.println("Unary error");
+                    //System.out.println("Unary error");
+                    checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
                 }
             } else {
                 parsePrimaryExp();
@@ -435,24 +447,27 @@ public class Parser {
         treeBuilder.buildNode(SyntaxType.RETURN_STMT);
         terminalSymbol(); //return
         if (SyntaxType.expFirst(tool.getSyntaxTypeOfFirstToken())) { parseExp(); }
-        if (tool.isSemicn()) { terminalSymbol(); }
-        else {
-            System.out.println("return error");
-        }
+        //if (tool.isSemicn()) { terminalSymbol(); }
+        //else {
+        //    System.out.println("return error");
+        //}
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new ReturnStmtNode());
     }
 
     public void parseBreakStmt() {
         treeBuilder.buildNode(SyntaxType.BREAK_STMT);
         terminalSymbol();
-        terminalSymbol();
+        //terminalSymbol();
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new BreakStmtNode());
     }
 
     public void parseContinueStmt() {
         treeBuilder.buildNode(SyntaxType.CONTINUE_STMT);
         terminalSymbol();
-        terminalSymbol();
+        //terminalSymbol();
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new ContinueStmtNode());
     }
 
@@ -461,7 +476,8 @@ public class Parser {
         terminalSymbol(); //if
         terminalSymbol(); //(
         parseCond();
-        terminalSymbol(); //)
+        //terminalSymbol(); //)
+        checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
         parseStmt();
         if(tool.isElse()){
             terminalSymbol();
@@ -479,8 +495,10 @@ public class Parser {
             terminalSymbol();
             parseExp();
         }
-        terminalSymbol(); //)
-        terminalSymbol(); //;
+        //terminalSymbol(); //)
+        //terminalSymbol(); //;
+        checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
+        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         treeBuilder.finishNode(new PrintfStmtNode());
     }
 
@@ -502,10 +520,13 @@ public class Parser {
             terminalSymbol(); //;
         } else if (tool.isLBrace()) {
             parseBlock();
+        } else if (tool.isRBrace()) {
+            checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         } else {
             if (tool.isNumber() || tool.isPlusOrMinus() || tool.isNot() || tool.isLParent()) {
                 parseExp();
-                terminalSymbol(); //;
+                //terminalSymbol(); //;
+                checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
             } else if (tool.isIdent()) {
                 int step = 1,flag = 0;
                 while (tool.lookAhead(step).equalType(SyntaxType.LBRACK) || flag >= 1) {
@@ -519,15 +540,19 @@ public class Parser {
                     if (tool.isGetInt()) {
                         terminalSymbol();
                         terminalSymbol();
-                        terminalSymbol();
-                        terminalSymbol();
+                        //terminalSymbol();
+                        checkToken(SyntaxType.RPARENT, ErrorType.RPARENT_MISSING);
+                        //terminalSymbol();
+                        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
                     } else {
                         parseExp();
-                        terminalSymbol();
+                        //terminalSymbol();
+                        checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
                     }
                 } else {
                     parseExp();
-                    terminalSymbol();
+                    //terminalSymbol();
+                    checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
                 }
             } else {
                 System.out.println("Stmt error");
@@ -537,6 +562,12 @@ public class Parser {
         treeBuilder.finishNode(new StmtNode());
     }
 
-
+    private void checkToken(SyntaxType syntaxType, ErrorType errorType){
+        if(tool.getSyntaxTypeOfFirstToken() == syntaxType){
+            terminalSymbol();
+        } else {
+            treeBuilder.addErrorNode(errorType, tool.lastTokenLine());
+        }
+    }
 
 }

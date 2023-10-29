@@ -1,5 +1,13 @@
 package paser.nodes;
 
+import error.ErrorCheckContext;
+import error.ErrorCheckReturn;
+import error.ErrorType;
+import lexer.SyntaxType;
+import paser.Mypair;
+
+import java.util.ArrayList;
+
 public class ReturnStmtNode extends Node {
     @Override
     public StringBuilder getPaserLog() {
@@ -8,4 +16,19 @@ public class ReturnStmtNode extends Node {
         }
         return this.paserLog;
     }
+
+    @Override
+    public void checkError(ArrayList<Mypair<ErrorType, Integer>> errorList, ErrorCheckContext ctx, ErrorCheckReturn ret) {
+        int line = 0;
+        for (Node child : children) {
+            if (child.getType() == SyntaxType.RETURNTK) {
+                line = child.endLine;
+            }
+            child.checkError(errorList, ctx, ret);
+            if (child.getType() == SyntaxType.EXP && ret.isVoid) {
+                errorList.add(Mypair.of(ErrorType.VOIDFUNC_RETURN_EXP, line));
+            }
+        }
+    }
+
 }

@@ -9,6 +9,10 @@ public class TokenNode extends Node{
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public StringBuilder getPaserLog() {
         this.paserLog.append(this).append("\n");

@@ -148,30 +148,36 @@ public class Lexer {
         StringBuilder ss = new StringBuilder();
         ss.append(sourceCode.charAt(chrPointer));
         char temp;
+//        do {
+//            temp = getChar();
+//            ss.append(temp);
+//            if (temp == '%') {
+//                char cc = peek();
+//                if(cc != 'd') {
+//                    System.out.println("bug");
+//                    return null;
+//                }
+//            } else if (temp == '\\') {
+//                char cc = peek();
+//                if(cc != 'n') {
+//                    System.out.println("bug");
+//                    return null;
+//                }
+//            }
+//        } while(isValidchr(temp));
+//        if (temp == '"') {
+//            getChar();
+//            return new Token(SyntaxType.STRCON, linePointer, ss.toString());
+//        } else {
+//            System.out.println("bug");
+//            return null;
+//        }
         do {
             temp = getChar();
             ss.append(temp);
-            if (temp == '%') {
-                char cc = peek();
-                if(cc != 'd') {
-                    System.out.println("bug");
-                    return null;
-                }
-            } else if (temp == '\\') {
-                char cc = peek();
-                if(cc != 'n') {
-                    System.out.println("bug");
-                    return null;
-                }
-            }
-        } while(isValidchr(temp));
-        if (temp == '"') {
-            getChar();
-            return new Token(SyntaxType.STRCON, linePointer, ss.toString());
-        } else {
-            System.out.println("bug");
-            return null;
-        }
+        } while(temp != '"');
+        getChar();
+        return new Token(SyntaxType.STRCON, linePointer, ss.toString());
     }
 
     public Token singleAnnotation() {

@@ -5,6 +5,7 @@ public class Token {
     private int emergeLine;
     private String value;
 
+
     public Token(SyntaxType type, int emergeLine, String value) {
         this.type = type;
         this.emergeLine = emergeLine;
@@ -26,7 +27,7 @@ public class Token {
     @Override
     public String toString()
     {
-        return type.toString() + " " + value;
+        return type.toString() + " " + value + " " + emergeLine;
     }
 
     public boolean equalType(SyntaxType type) {
