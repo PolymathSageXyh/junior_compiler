@@ -9,6 +9,7 @@ public class ErrorCheckReturn {
     public boolean isReturn;
     public boolean isVoid;
     public ArrayList<Integer> params;
+    public ArrayList<Integer> inits;
 
     public ErrorCheckReturn() {
         val = 0;
@@ -17,6 +18,7 @@ public class ErrorCheckReturn {
         isReturn = false;
         isVoid = false;
         params = new ArrayList<>();
+        inits = new ArrayList<>();
     }
 
     public void reset() {

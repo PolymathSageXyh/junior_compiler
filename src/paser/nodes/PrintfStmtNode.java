@@ -4,11 +4,14 @@ import error.ErrorCheckContext;
 import error.ErrorCheckReturn;
 import error.ErrorType;
 import lexer.SyntaxType;
+import lightllr.AstVisitor;
 import paser.Mypair;
 
 import java.util.ArrayList;
 
 public class PrintfStmtNode extends Node {
+    public String constr = null;
+    public ArrayList<Node> exp = new ArrayList<>();
     @Override
     public StringBuilder getPaserLog() {
         for (Node child : children) {
@@ -21,6 +24,7 @@ public class PrintfStmtNode extends Node {
         String ss =  ((TokenNode)children.get(2)).getValue();
         int formatLine = children.get(2).endLine;
         String str = ss.substring(1, ss.length() - 1);
+        constr = str;
         int printfLine = children.get(0).endLine;
         int cnt = 0;
         int expNum = 0;
@@ -52,10 +56,15 @@ public class PrintfStmtNode extends Node {
         }
         for (Node child : children) {
             if (child.getType() == SyntaxType.EXP) {
+                this.exp.add(child);
                 child.checkError(errorList, ctx, ret);
                 expNum++;
             }
         }
         if (cnt != expNum) errorList.add(Mypair.of(ErrorType.FORMAT_CHAR_NUM_UNMATCHED, printfLine));
+    }
+
+    public void accept(AstVisitor astVisitor) {
+        astVisitor.visit(this);
     }
 }

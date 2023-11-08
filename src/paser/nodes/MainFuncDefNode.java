@@ -4,21 +4,14 @@ import error.ErrorCheckContext;
 import error.ErrorCheckReturn;
 import error.ErrorType;
 import lexer.SyntaxType;
+import lightllr.AstVisitor;
 import paser.Mypair;
 import symbol.SymbolTable;
 
 import java.util.ArrayList;
 
 public class MainFuncDefNode extends Node{
-    BlockNode blockNode = null;
-
-    @Override
-    public void addChild(Node blockNode) {
-        super.addChild(blockNode);
-        if (blockNode instanceof BlockNode) {
-            this.blockNode = (BlockNode) blockNode;
-        }
-    }
+    public Node block = null;
 
     @Override
     public void checkError(ArrayList<Mypair<ErrorType, Integer>> errorList, ErrorCheckContext ctx, ErrorCheckReturn ret) {
@@ -33,6 +26,7 @@ public class MainFuncDefNode extends Node{
             } else if (child.getType() == SyntaxType.LPARENT) {
                 SymbolTable.getInstance().startScope();
             } else if (child.getType() == SyntaxType.BLOCK) {
+                block = child;
                 if (!SymbolTable.getInstance().tryAddFunc(params, name, isVoid)) {
                     errorList.add(Mypair.of(ErrorType.REDEFINED_IDENT, line));
                 }
@@ -47,6 +41,10 @@ public class MainFuncDefNode extends Node{
         if(!ret.isReturn && !isVoid) {
             errorList.add(Mypair.of(ErrorType.INTFUNC_MISS_RETURN,endLine));
         }
+    }
+
+    public void accept(AstVisitor astVisitor) {
+        astVisitor.visit(this);
     }
 
 }

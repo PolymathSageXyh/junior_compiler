@@ -1,5 +1,7 @@
 package symbol;
 
+import paser.nodes.InitValNode;
+
 import java.util.ArrayList;
 
 public class VarSymbol {      //常量，变量，形参
@@ -29,6 +31,18 @@ public class VarSymbol {      //常量，变量，形参
 
     public boolean isArray() {
         return dim.size() > 0;
+    }
+
+    public int getVVV() { return initials.get(0); }
+
+    public int getVVV(ArrayList<Integer> offset) {
+        if (offset.size() != dim.size()) System.out.println("dim not match!");
+        int size = offset.size();
+        if (size == 1) {
+            return initials.get(offset.get(0));
+        } else {
+            return initials.get(offset.get(0) * dim.get(0) + offset.get(1));
+        }
     }
 
 }

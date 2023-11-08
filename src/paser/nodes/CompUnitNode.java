@@ -3,6 +3,7 @@ package paser.nodes;
 import error.ErrorCheckContext;
 import error.ErrorCheckReturn;
 import error.ErrorType;
+import lightllr.AstVisitor;
 import paser.Mypair;
 import symbol.SymbolTable;
 
@@ -16,5 +17,9 @@ public class CompUnitNode extends Node{
             child.checkError(errorList, ctx, ret);
         }
         SymbolTable.getInstance().endScope();
+    }
+
+    public void accept(AstVisitor astVisitor) {
+        astVisitor.visit(this);
     }
 }

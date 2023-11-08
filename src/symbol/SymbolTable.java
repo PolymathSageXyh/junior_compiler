@@ -70,6 +70,16 @@ public class SymbolTable { //单例模式
         if (temp.contains(name)) return false;
         ArrayList<Integer> initials = new ArrayList<>();
         boolean isGlobal = symbolStack.size() == 1;
+        if(dim.size() == 0) {
+            initials.add(0);
+        } else if (dim.size() == 1) {
+            for (int i = 0; i < dim.get(0); i++)
+                initials.add(0);
+        } else {
+            int len = dim.get(0) * dim.get(1);
+            for (int i = 0; i < len; i++)
+                initials.add(0);
+        }
         VarSymbol varSymbol = new VarSymbol(isGlobal, isConst, dim, initials);
         temp.add(name);
         if (isGlobal) {
@@ -80,6 +90,26 @@ public class SymbolTable { //单例模式
         }
         vars.get(name).push(varSymbol);
         return true;
+    }
+
+    public boolean addVar(boolean isConst, ArrayList<Integer> dim, String name, ArrayList<Integer> inits) {
+        HashSet<String> temp = symbolStack.peek();
+        if (temp.contains(name)) return false;
+        boolean isGlobal = symbolStack.size() == 1;
+        VarSymbol varSymbol = new VarSymbol(isGlobal, isConst, dim, inits);
+        temp.add(name);
+        if (isGlobal) {
+            globalVal.put(name,varSymbol);
+        }
+        if (!vars.containsKey(name)) {
+            vars.put(name, new Stack<>());
+        }
+        vars.get(name).push(varSymbol);
+        return true;
+    }
+
+    public boolean isGlobal() {
+        return symbolStack.size() == 1;
     }
 
 }

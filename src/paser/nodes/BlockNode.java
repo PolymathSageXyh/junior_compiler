@@ -4,6 +4,7 @@ import error.ErrorCheckContext;
 import error.ErrorCheckReturn;
 import error.ErrorType;
 import lexer.SyntaxType;
+import lightllr.AstVisitor;
 import paser.Mypair;
 import symbol.SymbolTable;
 
@@ -26,4 +27,9 @@ public class BlockNode extends Node{
         }
         SymbolTable.getInstance().endScope();
     }
+
+    public void acccept(AstVisitor astVisitor) {
+        astVisitor.visit(this);
+    }
+
 }

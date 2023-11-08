@@ -305,7 +305,7 @@ public class Parser {
             terminalSymbol();
             parseAddExp();
         }
-        treeBuilder.finishNode(new AddExpNode());
+        treeBuilder.finishNode(new RelExpNode());
     }
 
     public void parseCond() {
@@ -503,27 +503,36 @@ public class Parser {
     }
 
     public void parseStmt() {
+        SyntaxType type = null;
         treeBuilder.buildNode(SyntaxType.STMT);
         if (tool.isFor()) {
+            type = SyntaxType.FOR_LOOP_STMT;
             parseForLoopStmt();
         } else if (tool.isReturn()) {
+            type = SyntaxType.RETURN_STMT;
             parseReturnStmt();
         } else if (tool.isBreak()) {
+            type = SyntaxType.BREAK_STMT;
             parseBreakStmt();
         } else if (tool.isContinue()) {
+            type = SyntaxType.CONTINUE_STMT;
             parseContinueStmt();
         } else if (tool.isPrintf()) {
+            type = SyntaxType.PRINTF_STMT;
             parsePrintfStmt();
         } else if (tool.isIf()) {
+            type = SyntaxType.IF_STMT;
             parseIfStmt();
         } else if (tool.isSemicn()) {
             terminalSymbol(); //;
         } else if (tool.isLBrace()) {
+            type = SyntaxType.BLOCK;
             parseBlock();
         } else if (tool.isRBrace()) {
             checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
         } else {
             if (tool.isNumber() || tool.isPlusOrMinus() || tool.isNot() || tool.isLParent()) {
+                type = SyntaxType.EXP;
                 parseExp();
                 //terminalSymbol(); //;
                 checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
@@ -535,6 +544,7 @@ public class Parser {
                     step++;
                 }
                 if (tool.lookAhead(step).equalType(SyntaxType.ASSIGN)) {
+                    type = SyntaxType.ASSIGN;
                     parseLVal();
                     terminalSymbol();
                     if (tool.isGetInt()) {
@@ -550,6 +560,7 @@ public class Parser {
                         checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
                     }
                 } else {
+                    type = SyntaxType.EXP;
                     parseExp();
                     //terminalSymbol();
                     checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
@@ -559,7 +570,7 @@ public class Parser {
                 return;
             }
         }
-        treeBuilder.finishNode(new StmtNode());
+        treeBuilder.finishNode(new StmtNode(type));
     }
 
     private void checkToken(SyntaxType syntaxType, ErrorType errorType){
