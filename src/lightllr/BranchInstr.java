@@ -15,17 +15,23 @@ public class BranchInstr extends Instruction {
 
         public static BranchInstr create_cond_br(Value cond, BasicBlock if_true, BasicBlock if_false,
             BasicBlock bb) {
-            if_true.addPreBasicBlock(bb);
-            if_false.addPreBasicBlock(bb);
-            bb.addSuccBasicBlock(if_false);
-            bb.addSuccBasicBlock(if_true);
-            return new BranchInstr(cond, if_true, if_false, bb);
+            if (!bb.getHasBr()) {
+                if_true.addPreBasicBlock(bb);
+                if_false.addPreBasicBlock(bb);
+                bb.addSuccBasicBlock(if_false);
+                bb.addSuccBasicBlock(if_true);
+                return new BranchInstr(cond, if_true, if_false, bb);
+            }
+           return null;
         }
         public static BranchInstr create_br(BasicBlock if_true, BasicBlock bb) {
-            if_true.addPreBasicBlock(bb);
-            bb.addSuccBasicBlock(if_true);
+            if (!bb.getHasBr()) {
+                if_true.addPreBasicBlock(bb);
+                bb.addSuccBasicBlock(if_true);
 
-            return new BranchInstr(if_true, bb);
+                return new BranchInstr(if_true, bb);
+            }
+            return null;
         }
 
         public boolean is_cond_br() {

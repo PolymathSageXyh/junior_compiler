@@ -2,6 +2,9 @@ import error.ErrorCheckContext;
 import error.ErrorCheckReturn;
 import error.ErrorType;
 import lexer.Lexer;
+import lightllr.optimization.Mem2Reg;
+import lightllr.optimization.Pass;
+import lightllr.optimization.PassManager;
 import paser.Mypair;
 import paser.nodes.CompUnitNode;
 import paser.nodes.Node;
@@ -36,8 +39,14 @@ public class Compiler {
             SysBuilder sysBuilder = new SysBuilder();
             sysBuilder.visit((CompUnitNode) root);
             sysBuilder.getModule().setPrintName();
+            //String res = sysBuilder.getModule().print();
+            PassManager pp = new PassManager(sysBuilder.getModule());
+            pp.addPass(new Mem2Reg(sysBuilder.getModule()), false);
+            pp.run();
             String res = sysBuilder.getModule().print();
-            System.out.println(sysBuilder.getModule().print());
+
+
+            //System.out.println(sysBuilder.getModule().print());
             //StringBuilder ss = new StringBuilder();
             //for(Mypair<ErrorType,Integer> i:errorList){
             //    ss.append(i.second).append(" ").append(ErrorType.error2type(i.first)).append("\n");

@@ -10,6 +10,7 @@ public class BasicBlock extends Value {
     private ArrayList<BasicBlock> succbbs;
     private ArrayList<Instruction> instrList;
     private Function parent;
+    private boolean hasBr;
 
     public BasicBlock(Module m, String name, Function parent) {
         super(IrType.getLabelType(m), name);
@@ -18,6 +19,7 @@ public class BasicBlock extends Value {
         prebbs = new ArrayList<>();
         succbbs = new ArrayList<>();
         instrList  = new ArrayList<>();
+        hasBr = false;
     }
 
     public BasicBlock(Module m, Function parent) {
@@ -27,7 +29,12 @@ public class BasicBlock extends Value {
         prebbs = new ArrayList<>();
         succbbs = new ArrayList<>();
         instrList  = new ArrayList<>();
+        hasBr = false;
     }
+
+    public void setHasBr(boolean hasBr) { this.hasBr = hasBr; }
+
+    public boolean getHasBr() { return hasBr; }
 
     public static BasicBlock create(Module m, String name ,
                               Function parent) {

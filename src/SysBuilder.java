@@ -347,7 +347,6 @@ public class SysBuilder implements AstVisitor {
             builder.setInsertPoint(loopBody);
             ((StmtNode)forLoopStmtNode.stmt).accept(this);
             builder.createBr(change);
-
             builder.setInsertPoint(change);
             ((ForStmtNode)forLoopStmtNode.forstmt2).accept(this);
             builder.createBr(loopJudge);
@@ -569,7 +568,7 @@ public class SysBuilder implements AstVisitor {
             cond.accept(this);
             builder.setInsertPoint(trueBB);
             ((StmtNode)ifStmtNode.if_stmt).accept(this);
-            if (return_flag == 0) {
+            if (return_flag == 0 && builder.getInsertBlock().get_terminator() == null) {
                 builder.createBr(nextBB);
             }
             return_flag = 0;

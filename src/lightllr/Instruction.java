@@ -38,8 +38,14 @@ public class Instruction extends User{
         this.parent = parent;
         this.opid = id;
         this.numOps = numOps;
-        this.parent.addInstruction(this);
+        if (!this.parent.getHasBr()) {
+            this.parent.addInstruction(this);
+            if (id == OpID.br) {
+                this.parent.setHasBr(true);
+            }
+        }
     }
+
     public Instruction(IrType ty, OpID id, int numOps) {
         super(ty, "", numOps);
         this.parent = null;
@@ -72,37 +78,37 @@ public class Instruction extends User{
         };
     }
 
-    boolean isVoid() { return ((opid == OpID.ret) || (opid == OpID.br) || (opid == OpID.store) || (opid == OpID.call && this.getIrType().isVoidType())); }
+    public boolean isVoid() { return ((opid == OpID.ret) || (opid == OpID.br) || (opid == OpID.store) || (opid == OpID.call && this.getIrType().isVoidType())); }
 
-    boolean isPhi() { return opid == OpID.phi; }
-    boolean isStore() { return opid == OpID.store; }
-    boolean isAlloca() { return opid == OpID.alloca; }
-    boolean isRet() { return opid == OpID.ret; }
-    boolean isLoad() { return opid == OpID.load; }
-    boolean isBr() { return opid == OpID.br; }
+    public boolean isPhi() { return opid == OpID.phi; }
+    public boolean isStore() { return opid == OpID.store; }
+    public boolean isAlloca() { return opid == OpID.alloca; }
+    public boolean isRet() { return opid == OpID.ret; }
+    public boolean isLoad() { return opid == OpID.load; }
+    public boolean isBr() { return opid == OpID.br; }
 
-    boolean isAdd() { return opid == OpID.add; }
-    boolean isSub() { return opid == OpID.sub; }
-    boolean isMul() { return opid == OpID.mul; }
-    boolean isDiv() { return opid == OpID.sdiv; }
+    public boolean isAdd() { return opid == OpID.add; }
+    public boolean isSub() { return opid == OpID.sub; }
+    public boolean isMul() { return opid == OpID.mul; }
+    public boolean isDiv() { return opid == OpID.sdiv; }
 
-    boolean isCmp() { return opid == OpID.cmp; }
+    public boolean isCmp() { return opid == OpID.cmp; }
 
-    boolean isCall() { return opid == OpID.call; }
-    boolean isGep() { return opid == OpID.getelementptr; }
-    boolean isZext() { return opid == OpID.zext; }
+    public boolean isCall() { return opid == OpID.call; }
+    public boolean isGep() { return opid == OpID.getelementptr; }
+    public boolean isZext() { return opid == OpID.zext; }
 
 
-    boolean isBinary()
+    public boolean isBinary()
     {
         return (isAdd() || isSub() || isMul() || isDiv()) &&
                 (getNumOps() == 2);
     }
 
-    boolean isTerminator() { return isBr() || isRet(); }
+    public boolean isTerminator() { return isBr() || isRet(); }
 
     public BasicBlock getParent() { return parent; }
-    void set_parent(BasicBlock parent) { this.parent = parent; }
+    public void set_parent(BasicBlock parent) { this.parent = parent; }
     // Return the function this instruction belongs to.
     public Function getFunction() {
         return parent.getParent();

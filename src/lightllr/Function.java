@@ -63,6 +63,8 @@ public class Function extends Value {
         basicBlocks.add(bb);
     }
 
+    public BasicBlock getEntryBB() { return basicBlocks.get(0); }
+
     public void remove(BasicBlock bb) {
         basicBlocks.remove(bb);
         for (BasicBlock pre : bb.getPrebbs()) {
