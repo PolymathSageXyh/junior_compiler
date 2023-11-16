@@ -1,5 +1,7 @@
 package lightllr;
 
+import mips.Register;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,6 +10,7 @@ public class Function extends Value {
     private ArrayList<Argument> arguments = new ArrayList<>();         // arguments
     private Module parent;
     private int seqCnt;
+    private HashMap<Value, Register> var2reg = new HashMap<>();
 
     private void buildArgs() {
         FunctionType funcTy = getFunctionType();
@@ -25,8 +28,23 @@ public class Function extends Value {
         buildArgs();
     }
 
+    public Function(FunctionType ty, String name) {
+        super(ty, name);
+        this.seqCnt = 0;
+        buildArgs();
+    }
+
+
     public static Function create(FunctionType ty, String name, Module parent) {
         return new Function(ty, name, parent);
+    }
+
+    public HashMap<Value, Register> getVar2reg() {
+        return var2reg;
+    }
+
+    public void setVar2reg(HashMap<Value, Register> var2reg) {
+        this.var2reg = var2reg;
     }
 
     public FunctionType getFunctionType() {

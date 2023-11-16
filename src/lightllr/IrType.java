@@ -53,6 +53,8 @@ public class IrType {
         return m.getInt32Type();
     }
 
+    public static IntegerType getInt8Type(Module m) { return m.getInt8Type(); }
+
     public static PointerType getInt32PtrType(Module m) {
         return m.getInt32PtrType();
     }

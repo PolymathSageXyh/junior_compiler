@@ -26,6 +26,7 @@ public class Instruction extends User{
         and,
         or,
         xor,
+        move,
     }
 
     private BasicBlock parent;
@@ -74,6 +75,7 @@ public class Instruction extends User{
             case and -> "and";
             case or -> "or";
             case xor -> "xor";
+            case move -> "move";
             default -> "";
         };
     }
@@ -81,6 +83,8 @@ public class Instruction extends User{
     public boolean isVoid() { return ((opid == OpID.ret) || (opid == OpID.br) || (opid == OpID.store) || (opid == OpID.call && this.getIrType().isVoidType())); }
 
     public boolean isPhi() { return opid == OpID.phi; }
+
+    public boolean isMov() { return opid == OpID.move; }
     public boolean isStore() { return opid == OpID.store; }
     public boolean isAlloca() { return opid == OpID.alloca; }
     public boolean isRet() { return opid == OpID.ret; }

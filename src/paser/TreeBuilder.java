@@ -8,7 +8,7 @@ import error.ErrorType;
 import java.util.Stack;
 
 public class TreeBuilder {
-    private Stack<Node> children;
+    public Stack<Node> children;
     private Stack<Mypair<SyntaxType, Integer>> parents;
 
     public TreeBuilder() {

@@ -14,6 +14,7 @@ public class Module {
     private String sourceFileName;    // Original source file name for module, for test and debug
     private IntegerType int1Ty = new IntegerType(1, this);
     private IntegerType int32Ty = new IntegerType(32, this);
+    private IntegerType int8Ty = new IntegerType(8, this);
     private IrType labelTy = new IrType(IrType.TypeID.LabelTyID, this);
     private IrType voidTy = new IrType(IrType.TypeID.VoidTyID, this);
     private HashMap<IrType, PointerType> pointerMap;
@@ -58,6 +59,8 @@ public class Module {
     public IntegerType getInt1Type() { return int1Ty; }
 
     public IntegerType getInt32Type() { return int32Ty; }
+
+    public IntegerType getInt8Type() { return int8Ty; }
 
     public PointerType getPointerType(IrType contains) {
         if(!pointerMap.containsKey(contains)) {

@@ -56,6 +56,7 @@ public class Dominators extends Pass {
             createReversePostOrder(f);
             createIdom(f);
             moveUnreachableBlocks(f);
+            getIdomList(f);
             createDominanceFrontier(f);
             createDomTreeSucc(f);
             // for debug
@@ -132,6 +133,18 @@ public class Dominators extends Pass {
                     changed = true;
                 }
             }
+        }
+    }
+
+    public void getIdomList(Function f) {
+        for (BasicBlock bb : f.getBasicBlocks()) {
+            ArrayList<BasicBlock> res = new ArrayList<>();
+            for(HashMap.Entry<BasicBlock, BasicBlock> entry : idom.entrySet()) {
+                if (entry.getValue() == bb && entry.getKey() != bb) {
+                    res.add(entry.getKey());
+                }
+            }
+            bb.setDomlist(res);
         }
     }
 

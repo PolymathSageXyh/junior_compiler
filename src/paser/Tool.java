@@ -11,6 +11,14 @@ public class Tool {
         this.pointer = 0;
     }
 
+    public void setPointer(int pp) {
+        pointer = pp;
+    }
+
+    public int getPointer() {
+        return pointer;
+    }
+
     public boolean isEnd() {
         return pointer >= tokens.size();
     }

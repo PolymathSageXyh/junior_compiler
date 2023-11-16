@@ -108,6 +108,7 @@ public class Mem2Reg extends Pass {
                         // generate phi for bb_dominance_frontier_bb & add bb_dominance_frontier_bb to work list
                         PhiInstr phi = PhiInstr.createPhi(var.getIrType().getPointerElementType(), bb_dominance_frontier_bb);
                         phi.setLval(var);
+                        phi.setName();
                         bb_dominance_frontier_bb.addInstrBegin(phi);
                         work_list.add(bb_dominance_frontier_bb);
                         bb_has_var_phi.put(Mypair.of(bb_dominance_frontier_bb, var), true);

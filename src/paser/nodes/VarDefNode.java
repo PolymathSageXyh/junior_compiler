@@ -39,7 +39,8 @@ public class VarDefNode extends Node {
                 } else {
                     this.nums.addAll(((InitValNode)child).nums);
                 }
-
+            } else {
+                child.checkError(errorList, ctx, ret);
             }
         }
         this.dimention = dim;

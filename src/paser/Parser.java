@@ -537,15 +537,10 @@ public class Parser {
                 //terminalSymbol(); //;
                 checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
             } else if (tool.isIdent()) {
-                int step = 1,flag = 0;
-                while (tool.lookAhead(step).equalType(SyntaxType.LBRACK) || flag >= 1) {
-                    if (tool.lookAhead(step).equalType(SyntaxType.LBRACK)) flag++;
-                    if (tool.lookAhead(step).equalType(SyntaxType.RBRACK)) flag--;
-                    step++;
-                }
-                if (tool.lookAhead(step).equalType(SyntaxType.ASSIGN)) {
+                int point = tool.getPointer();
+                parseLVal();
+                if (tool.lookAhead(0).equalType(SyntaxType.ASSIGN)) {
                     type = SyntaxType.ASSIGN;
-                    parseLVal();
                     terminalSymbol();
                     if (tool.isGetInt()) {
                         terminalSymbol();
@@ -560,6 +555,8 @@ public class Parser {
                         checkToken(SyntaxType.SEMICN, ErrorType.SEMICOLON_MISSING);
                     }
                 } else {
+                    treeBuilder.children.pop();
+                    tool.setPointer(point);
                     type = SyntaxType.EXP;
                     parseExp();
                     //terminalSymbol();

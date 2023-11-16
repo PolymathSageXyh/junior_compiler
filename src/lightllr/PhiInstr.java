@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class PhiInstr extends Instruction {
     private Value l_val;
+
+    public static int num = 0;
     private PhiInstr(OpID op, ArrayList<Value> vals, ArrayList<BasicBlock> valBBs, IrType ty, BasicBlock bb) {
         super(ty, op, 2* vals.size());
         for ( int i = 0; i < vals.size(); i++) {
@@ -29,6 +31,10 @@ public class PhiInstr extends Instruction {
     public void addPhiPairOperand(Value val, Value pre_bb) {
         this.addOperand(val);
         this.addOperand(pre_bb);
+    }
+
+    public void setName () {
+        this.name = "phi"+ num++;
     }
 
     public String print() {

@@ -13,6 +13,18 @@ public class GetElementPtrInstr extends Instruction {
         elementTy = get_element_type(ptr, idxs);
     }
 
+    public GetElementPtrInstr(BasicBlock bb, Value ptr, ArrayList<Value> idxs) {
+        super(PointerType.get(get_element_type(ptr, idxs)), OpID.getelementptr, 1 + idxs.size());
+        setOperand(0, ptr);
+        for (int i = 0; i < idxs.size(); i++) {
+            setOperand(i + 1, idxs.get(i));
+        }
+        elementTy = get_element_type(ptr, idxs);
+        this.set_parent(bb);
+    }
+
+
+
     public static IrType get_element_type(Value ptr, ArrayList<Value> idxs)
     {
 

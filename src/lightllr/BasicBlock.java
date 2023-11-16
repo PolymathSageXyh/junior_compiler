@@ -1,6 +1,7 @@
 package lightllr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static lightllr.Instruction.OpID.br;
 import static lightllr.Instruction.OpID.ret;
@@ -11,6 +12,11 @@ public class BasicBlock extends Value {
     private ArrayList<Instruction> instrList;
     private Function parent;
     private boolean hasBr;
+    private HashSet<Value> in;
+    private HashSet<Value> out;
+    private HashSet<Value> def;
+    private HashSet<Value> use;
+    private ArrayList<BasicBlock> domlist;
 
     public BasicBlock(Module m, String name, Function parent) {
         super(IrType.getLabelType(m), name);
@@ -19,6 +25,11 @@ public class BasicBlock extends Value {
         prebbs = new ArrayList<>();
         succbbs = new ArrayList<>();
         instrList  = new ArrayList<>();
+        in = new HashSet<>();
+        out = new HashSet<>();
+        def = new HashSet<>();
+        use = new HashSet<>();
+        domlist = new ArrayList<>();
         hasBr = false;
     }
 
@@ -29,15 +40,60 @@ public class BasicBlock extends Value {
         prebbs = new ArrayList<>();
         succbbs = new ArrayList<>();
         instrList  = new ArrayList<>();
+        in = new HashSet<>();
+        out = new HashSet<>();
+        def = new HashSet<>();
+        use = new HashSet<>();
+        domlist = new ArrayList<>();
         hasBr = false;
+    }
+
+    public void setDomlist(ArrayList<BasicBlock> domlist) {
+        this.domlist = domlist;
+    }
+
+    public ArrayList<BasicBlock> getDomlist() {
+        return domlist;
     }
 
     public void setHasBr(boolean hasBr) { this.hasBr = hasBr; }
 
     public boolean getHasBr() { return hasBr; }
 
+    public void setIn(HashSet<Value> in) {
+        this.in = in;
+    }
+
+    public void setOut(HashSet<Value> out) {
+        this.out = out;
+    }
+
+    public HashSet<Value> getIn() {
+        return in;
+    }
+
+    public HashSet<Value> getOut() {
+        return out;
+    }
+
+    public HashSet<Value> getDef() {
+        return def;
+    }
+
+    public HashSet<Value> getUse() {
+        return use;
+    }
+
+    public void setDef(HashSet<Value> def) {
+        this.def = def;
+    }
+
+    public void setUse(HashSet<Value> use) {
+        this.use = use;
+    }
+
     public static BasicBlock create(Module m, String name ,
-                              Function parent) {
+                                    Function parent) {
         String prefix = name.length() == 0 ? "" : "label_";
         return new BasicBlock(m, prefix + name, parent);
     }

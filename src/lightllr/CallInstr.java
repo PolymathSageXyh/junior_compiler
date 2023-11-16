@@ -11,6 +11,17 @@ public class CallInstr extends Instruction {
             setOperand(i, args.get(i-1));
         }
     }
+
+    public CallInstr(BasicBlock bb, Function func, ArrayList<Value> args) {
+        super(func.getReturnType(), OpID.call, args.size() + 1);
+        int numOps = args.size() + 1;
+        setOperand(0, func);
+        for (int i = 1; i< numOps; i++) {
+            setOperand(i, args.get(i-1));
+        }
+        this.set_parent(bb);
+    }
+
     public static CallInstr create(Function func, ArrayList<Value> args, BasicBlock bb) {
         return new CallInstr(func, args, bb);
     }
