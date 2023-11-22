@@ -36,6 +36,10 @@ public class BinaryInstr extends Instruction {
         return new BinaryInstr(IrType.getInt1Type(m), OpID.xor, v1, v2, bb);
     }
 
+    public static BinaryInstr createSrem(Value v1, Value v2, BasicBlock bb, Module m) {
+        return new BinaryInstr(IrType.getInt32Type(m), OpID.srem, v1, v2, bb);
+    }
+
     public String print() {
         String instr_ir = "";
         instr_ir += "%";

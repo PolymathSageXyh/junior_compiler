@@ -21,6 +21,28 @@ public class ConstantArray extends Constant{
 
     public int getSizeOfArray() { return constArray.size(); }
 
+    public ArrayList<Constant> getConstArray() { return constArray; }
+
+    public ArrayList<ConstantInt> getDataElements() {
+        Constant tmp = constArray.get(0);
+        if (tmp instanceof ConstantInt) {
+            ArrayList<ConstantInt> res = new ArrayList<>();
+            for (Constant item : constArray) {
+                res.add((ConstantInt) item);
+            }
+            return res;
+        } else {
+            ArrayList<ConstantInt> res = new ArrayList<>();
+            for (Constant item : constArray) {
+                ConstantArray hh = (ConstantArray)item;
+                for (Constant cc : hh.getConstArray()) {
+                    res.add((ConstantInt) cc);
+                }
+            }
+            return res;
+        }
+    }
+
     public static ConstantArray get(ArrayType ty, ArrayList<Constant> val) {
         return new ConstantArray(ty, val);
     }

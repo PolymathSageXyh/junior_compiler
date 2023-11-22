@@ -8,6 +8,8 @@ public class ConstantStr extends Constant {
         this.content = content;
     }
 
+    public String getContent() { return content; }
+
     public static ConstantStr get(ArrayType ty, String content) {
         return new ConstantStr(ty, content);
     }

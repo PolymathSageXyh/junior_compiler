@@ -59,7 +59,7 @@ public class RemovePhi extends Pass {
                 } else {
                     VirValue tmpReg = new VirValue(cirPint.getIrType());
                     MoveInstr mm = MoveInstr.createMove(oriSrc, tmpReg, bb, module);
-                    System.out.println(mm.print());
+                    //System.out.println(mm.print());
                     moves.add(mm);
                     map.put(cirPint, tmpReg);
                 }
@@ -67,7 +67,7 @@ public class RemovePhi extends Pass {
                 for (Value v : rmKeys) {
                     Value gg = map.get(v);
                     MoveInstr mm = MoveInstr.createMove(map.get(v), v, bb, module);
-                    System.out.println(mm.print());
+                    //System.out.println(mm.print());
                     moves.add(mm);
                     map.remove(v);
                 }
@@ -75,12 +75,24 @@ public class RemovePhi extends Pass {
         }
         if (!moves.isEmpty()) {
             if (bb.getSuccbbs().size() == 1) {
+                ArrayList<MoveInstr> temp =  handleConflict(moves, bb.getParent(), bb);
+                if (temp.size() > 0) {
+                    for (MoveInstr vv : temp) {
+                        moves.add(0, vv);
+                    }
+                }
                 for (MoveInstr moveInstr : moves) {
                     int index = bb.getInstrList().size()-1;
                     bb.getInstrList().add(index, moveInstr);
                 }
             } else {
                 BasicBlock mid = new BasicBlock(module, "", bb.getParent());
+                ArrayList<MoveInstr> temp =  handleConflict(moves, mid.getParent(), mid);
+                if (temp.size() > 0) {
+                    for (MoveInstr vv : temp) {
+                        moves.add(0, vv);
+                    }
+                }
                 for (MoveInstr moveInstr : moves) {
                     mid.getInstrList().add(moveInstr);
                 }
@@ -98,6 +110,7 @@ public class RemovePhi extends Pass {
                 bb.getSuccbbs().remove(succ);
                 bb.getSuccbbs().add(mid);
                 mid.getPrebbs().add(bb);
+                bb.addDomList(mid);
             }
         }
 
@@ -119,6 +132,36 @@ public class RemovePhi extends Pass {
             ori = G.get(ori);
         }
         return ori;
+    }
+
+    public ArrayList<MoveInstr> handleConflict(ArrayList<MoveInstr> moves, Function func, BasicBlock bb) {
+        HashSet<Value> rec = new HashSet<>();
+        ArrayList<MoveInstr> resList = new ArrayList<>();
+        for (int i = moves.size() - 1; i >= 0; i--) {
+            Value value =  moves.get(i).getSrc();
+            if (!(value instanceof ConstantInt) && !rec.contains(value)) {
+                boolean regConflict = false;
+                for (int j = 0; j < i; j++) {
+                    if (func.getVar2reg() != null && func.getVar2reg().get(value) != null &&
+                            func.getVar2reg().get(moves.get(j).getDst()) == func.getVar2reg().get(value)) {
+                        regConflict = true;
+                        break;
+                    }
+                }
+                if (regConflict) {
+                    VirValue tmpReg = new VirValue(IrType.getInt32Type(func.getParent()));
+                    for (MoveInstr move : moves) {
+                        if (move.getSrc().equals(value)) {
+                            move.setSrc(tmpReg);
+                        }
+                    }
+                    MoveInstr mm = MoveInstr.createMove(value, tmpReg, bb, module);
+                    resList.add(mm);
+                }
+                rec.add(value);
+            }
+        }
+        return resList;
     }
 
     @Override

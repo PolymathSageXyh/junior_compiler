@@ -25,9 +25,9 @@ public class AssemblyTable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(".data\n");
-        sb.append(dataSegent.stream().map(assembly -> assembly.toString()).collect(Collectors.joining("\n"))) ;
+        sb.append(dataSegent.stream().map(Object::toString).collect(Collectors.joining("\n"))) ;
         sb.append("\n\n\n.text\n");
-        sb.append(textSegment.stream().map(assembly -> assembly.toString()).collect(Collectors.joining("\n")));
+        sb.append(textSegment.stream().map(Object::toString).collect(Collectors.joining("\n")));
         return sb.toString();
     }
 }

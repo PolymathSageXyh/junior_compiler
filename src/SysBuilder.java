@@ -38,21 +38,29 @@ public class SysBuilder implements AstVisitor {
         ArrayList<IrType> getIntParams = new ArrayList<>();
         FunctionType getInt = FunctionType.get(tyInt32, getIntParams);
         Function getIntFunc = Function.create(getInt, "getint", module);
+        getIntFunc.setLibrary(true);
+        getIntFunc.setHasSideEffect(true);
 
         ArrayList<IrType> putIntParams = new ArrayList<>();
         putIntParams.add(tyInt32);
         FunctionType putInt = FunctionType.get(tyVoid, putIntParams);
         Function putIntFunc = Function.create(putInt, "putint", module);
+        putIntFunc.setLibrary(true);
+        putIntFunc.setHasSideEffect(true);
 
         ArrayList<IrType> putchParams = new ArrayList<>();
         putchParams.add(tyInt32);
         FunctionType putCh = FunctionType.get(tyVoid, putchParams);
         Function putChFunc = Function.create(putCh, "putch", module);
+        putChFunc.setHasSideEffect(true);
+        putChFunc.setLibrary(true);
 
         ArrayList<IrType> putStrParams = new ArrayList<>();
         putStrParams.add(pp);
         FunctionType putStr = FunctionType.get(tyVoid, putStrParams);
         Function putStrFunc = Function.create(putStr, "putstr", module);
+        putStrFunc.setLibrary(true);
+        putStrFunc.setHasSideEffect(true);
 
         scope.enter();
         scope.push("getint", getIntFunc);
@@ -793,9 +801,10 @@ public class SysBuilder implements AstVisitor {
             } else if (mulExpNode.op == SyntaxType.DIV){
                 icmp = builder.createIsdiv(AdditiveExpression, Term);
             } else {
-                Value tmp1 = builder.createIsdiv(AdditiveExpression, Term);
-                Value tmp2 = builder.createImul(Term, tmp1);
-                icmp = builder.createIsub(AdditiveExpression, tmp2);
+                icmp = builder.createIsrem(AdditiveExpression, Term);
+//                Value tmp1 = builder.createIsdiv(AdditiveExpression, Term);
+//                Value tmp2 = builder.createImul(Term, tmp1);
+//                icmp = builder.createIsub(AdditiveExpression, tmp2);
             }
             ret = icmp;
         }

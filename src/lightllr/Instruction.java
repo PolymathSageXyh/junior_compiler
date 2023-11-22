@@ -27,6 +27,7 @@ public class Instruction extends User{
         or,
         xor,
         move,
+        srem,
     }
 
     private BasicBlock parent;
@@ -76,6 +77,7 @@ public class Instruction extends User{
             case or -> "or";
             case xor -> "xor";
             case move -> "move";
+            case srem -> "srem";
             default -> "";
         };
     }
@@ -102,10 +104,12 @@ public class Instruction extends User{
     public boolean isGep() { return opid == OpID.getelementptr; }
     public boolean isZext() { return opid == OpID.zext; }
 
+    public boolean isSrem() { return opid == OpID.srem; }
+
 
     public boolean isBinary()
     {
-        return (isAdd() || isSub() || isMul() || isDiv()) &&
+        return (isAdd() || isSub() || isMul() || isDiv() || isSrem()) &&
                 (getNumOps() == 2);
     }
 

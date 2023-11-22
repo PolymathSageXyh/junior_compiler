@@ -11,6 +11,10 @@ public class Function extends Value {
     private Module parent;
     private int seqCnt;
     private HashMap<Value, Register> var2reg = new HashMap<>();
+    private boolean isLibrary;
+    private boolean hasSideEffect;
+    private ArrayList<Function> calleeList = new ArrayList<>(); //调用了哪些自定义函数
+    private ArrayList<Function> callerList = new ArrayList<>(); //被哪些自定义函数调用
 
     private void buildArgs() {
         FunctionType funcTy = getFunctionType();
@@ -25,6 +29,8 @@ public class Function extends Value {
         this.parent = parent;
         this.seqCnt = 0;
         parent.addFunction(this);
+        isLibrary = false;
+        hasSideEffect = false;
         buildArgs();
     }
 
@@ -34,6 +40,29 @@ public class Function extends Value {
         buildArgs();
     }
 
+    public ArrayList<Function> getCalleeList() {
+        return calleeList;
+    }
+
+    public ArrayList<Function> getCallerList() {
+        return callerList;
+    }
+
+    public void setLibrary(boolean library) {
+        isLibrary = library;
+    }
+
+    public boolean isLibrary() {
+        return isLibrary;
+    }
+
+    public void setHasSideEffect(boolean hasSideEffect) {
+        this.hasSideEffect = hasSideEffect;
+    }
+
+    public boolean isHasSideEffect() {
+        return hasSideEffect;
+    }
 
     public static Function create(FunctionType ty, String name, Module parent) {
         return new Function(ty, name, parent);
@@ -109,7 +138,7 @@ public class Function extends Value {
         {
             if (!seq.containsKey(bb)) {
                 int seq_num = seq.size() + seqCnt;
-                if (bb.setName("label"+seq_num )) {
+                if (bb.setName(name+"_label"+seq_num )) {
                     seq.put(bb, seq_num);
                 }
             }

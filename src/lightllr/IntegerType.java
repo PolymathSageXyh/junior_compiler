@@ -17,5 +17,9 @@ public class IntegerType extends IrType {
         return numBits == 1;
     }
 
+    public boolean isI8() {
+        return numBits == 8;
+    }
+
 
 }

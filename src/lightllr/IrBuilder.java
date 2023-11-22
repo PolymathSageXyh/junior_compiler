@@ -19,6 +19,8 @@ public class IrBuilder {
     public BinaryInstr createImul(Value lhs, Value rhs){ return BinaryInstr.createMul(lhs, rhs, bb, m);}
     public BinaryInstr createIsdiv(Value lhs, Value rhs) { return BinaryInstr.createSdiv(lhs, rhs, bb, m);}
 
+    public BinaryInstr createIsrem(Value lhs, Value rhs) { return BinaryInstr.createSrem(lhs, rhs, bb, m);}
+
     public BinaryInstr createIand(Value lhs, Value rhs) { return BinaryInstr.createAnd(lhs, rhs, bb, m);}
 
     public BinaryInstr createIor(Value lhs, Value rhs) { return BinaryInstr.createOr(lhs, rhs, bb, m);}

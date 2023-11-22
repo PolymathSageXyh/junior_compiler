@@ -126,6 +126,18 @@ public class ActiveVars extends Pass {
 //                                def.add(instr);
 //                            }
 //                        }
+                        else if (instr.isPhi()) {
+                            for (Value val : instr.getOperands()) {
+                                if (val instanceof Instruction || val instanceof Argument || val instanceof GlobalVariable) {
+                                    if (!def.contains(val)) {
+                                        use.add(val);
+                                    }
+                                }
+                            }
+                            if (!use.contains(instr)) {
+                                def.add(instr);
+                            }
+                        }
                         else if (instr.isMov()) {
                             Value src = ((MoveInstr)instr).getSrc();
                             Value dst = ((MoveInstr)instr).getDst();
@@ -178,31 +190,31 @@ public class ActiveVars extends Pass {
                     bb.setIn(live_in.get(bb));
                     bb.setOut(live_out.get(bb));
                 }
-                System.out.println(print());
+                //System.out.println(print());
             }
             map_def.clear();
             map_use.clear();
             //big_phi.clear();
-            for (BasicBlock bb : function.getBasicBlocks()) {
-                System.out.println("\n" + bb.getName() + ": ");
-                System.out.print("use: ");
-                for (Value value : bb.getUse()) {
-                    System.out.print(value.getName() + " ");
-                }
-                System.out.print("\ndef:");
-                for (Value value : bb.getDef()) {
-                    System.out.print(value.getName() + " ");
-                }
-                System.out.print("\nin:");
-                for (Value value : bb.getIn()) {
-                    System.out.print(value.getName() + " ");
-                }
-                System.out.print("\nout:");
-                for (Value value : bb.getOut()) {
-                    System.out.print(value.getName() + " ");
-                }
-                System.out.println("");
-            }
+//            for (BasicBlock bb : function.getBasicBlocks()) {
+//                System.out.println("\n" + bb.getName() + ": ");
+//                System.out.print("use: ");
+//                for (Value value : bb.getUse()) {
+//                    System.out.print(value.getName() + " ");
+//                }
+//                System.out.print("\ndef:");
+//                for (Value value : bb.getDef()) {
+//                    System.out.print(value.getName() + " ");
+//                }
+//                System.out.print("\nin:");
+//                for (Value value : bb.getIn()) {
+//                    System.out.print(value.getName() + " ");
+//                }
+//                System.out.print("\nout:");
+//                for (Value value : bb.getOut()) {
+//                    System.out.print(value.getName() + " ");
+//                }
+//                System.out.println("");
+//            }
         }
     }
 

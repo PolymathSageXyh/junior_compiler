@@ -25,6 +25,20 @@ public class CmpInstr extends Instruction {
         return new CmpInstr(IrType.getInt1Type(m), op, lhs, rhs, bb);
     }
 
+    public boolean compare(int a, int b) {
+        return switch (cmpOp) {
+            case EQ -> a == b;
+            case GE -> a >= b;
+            case GT -> a > b;
+            case NE -> a != b;
+            case LE -> a <= b;
+            case LT -> a < b;
+            default -> false;
+        };
+    }
+
+    public CmpOp getCmpOp() { return cmpOp; }
+
     public String print() {
         String instr_ir = "";
         instr_ir += "%";

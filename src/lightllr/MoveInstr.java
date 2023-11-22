@@ -24,6 +24,10 @@ public class MoveInstr extends Instruction {
         return dst;
     }
 
+    public void setSrc(Value src) {
+        this.src = src;
+    }
+
     public String print() {
         String instr_ir = "";
         instr_ir += this.getInstrOpName();

@@ -94,7 +94,7 @@ public class BasicBlock extends Value {
 
     public static BasicBlock create(Module m, String name ,
                                     Function parent) {
-        String prefix = name.length() == 0 ? "" : "label_";
+        String prefix = name.length() == 0 ? "" : parent.getName() + "_label_";
         return new BasicBlock(m, prefix + name, parent);
     }
 
@@ -109,6 +109,10 @@ public class BasicBlock extends Value {
     public void deleteInstr(Instruction instr) {
         instrList.remove(instr);
         instr.remove_use_of_ops();
+    }
+
+    public void addDomList(BasicBlock bb) {
+        domlist.add(bb);
     }
 
     public ArrayList<Instruction> getInstrList() { return instrList; }

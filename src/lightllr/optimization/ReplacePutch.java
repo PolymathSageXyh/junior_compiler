@@ -13,12 +13,12 @@ public class ReplacePutch extends Pass {
 
     public ReplacePutch(Module module) {
         super(module);
-        IrType tyVoid = IrType.getVoidType(module);
-        PointerType pp = PointerType.getPointerType(new IntegerType(8, module));
-        ArrayList<IrType> putStrParams = new ArrayList<>();
-        putStrParams.add(pp);
-        FunctionType ff = FunctionType.get(tyVoid, putStrParams);
-        putStr = new Function(ff, "putstr");
+        for (Function func : module.getFunctions()) {
+            if (func.getName().equals("putstr")) {
+                putStr = func;
+                break;
+            }
+        }
     }
 
     @Override
@@ -27,6 +27,7 @@ public class ReplacePutch extends Pass {
             if (func.getBasicBlocks().size() > 0) {
                 for (BasicBlock bb : func.getBasicBlocks()) {
                     ArrayList<Instruction> instrs = bb.getInstrList();
+                    ArrayList<Instruction> waitToDelete = new ArrayList<>();
                     for (int i = 0; i < instrs.size(); i++) {
                         Instruction instr = instrs.get(i);
                         // 需要特殊处理putch，将多个字符打印合并为字符串打印
@@ -38,6 +39,7 @@ public class ReplacePutch extends Pass {
                                 Instruction temp = instr;
                                 while (temp instanceof CallInstr &&
                                         (temp).getOperand(0).getName().equals("putch")) {
+                                    waitToDelete.add(temp);
                                     Value value = temp.getOperand(1);
                                     ss.append((char) (((ConstantInt) value).getTruth()));
                                     i += 1;
@@ -62,13 +64,8 @@ public class ReplacePutch extends Pass {
                         }
 
                     }
-                    for (int i = 0; i < instrs.size(); i++) {
-                        Instruction temp = instrs.get(i);
-                        if (temp instanceof CallInstr &&
-                                (temp).getOperand(0).getName().equals("putch")) {
-                            instrs.remove(i);
-                            i--;
-                        }
+                    for (Instruction instr : waitToDelete) {
+                        bb.deleteInstr(instr);
                     }
                 }
 
