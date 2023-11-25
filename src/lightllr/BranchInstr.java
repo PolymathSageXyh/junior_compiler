@@ -34,6 +34,10 @@ public class BranchInstr extends Instruction {
             return null;
         }
 
+        public static BranchInstr uncond_create_br(BasicBlock if_true, BasicBlock bb) {
+            return new BranchInstr(if_true, bb);
+        }
+
         public boolean is_cond_br() {
             return getNumOps() == 3;
         }

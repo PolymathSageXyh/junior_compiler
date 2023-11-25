@@ -59,6 +59,7 @@ public class Value {
         }
     }
 
-
-
+    public ArrayList<Use> getUseList() {
+        return useList;
+    }
 }

@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 public class Compiler {
     public static void main(String[] args) {
-        String inFilePath = "testfile.txt"; // 文件路径
-        String errorFilePath = "error.txt";
-        String outFilePath = "llvm_ir.txt";
-        String finalFilePath = "mips.txt";
+        String inFilePath = "src/testfile.txt"; // 文件路径
+        String errorFilePath = "src/error.txt";
+        String outFilePath = "src/llvm_ir.txt";
+        String finalFilePath = "src/mips.txt";
         try {
             //System.out.println(Files.exists(Paths.get(filePath)));
             String fileContent = Files.readString(Path.of(inFilePath));
@@ -57,24 +57,22 @@ public class Compiler {
             pp.addPass(new Mem2Reg(sysBuilder.getModule()), false);
             pp.addPass(new SideEffect(sysBuilder.getModule()), false);
             pp.addPass(new KillDeadCode(sysBuilder.getModule()), false);
+            pp.addPass(new ConstPropagation(sysBuilder.getModule()), false);
+            pp.addPass(new LoopInvHoist(sysBuilder.getModule()), false);
             pp.addPass(new ActiveVars(sysBuilder.getModule()), false);
             pp.addPass(new RegAllocator(sysBuilder.getModule()), false);
-            pp.addPass(new RemovePhi(sysBuilder.getModule()), false);
+            //pp.addPass(new RemovePhi(sysBuilder.getModule()), false);
 
             pp.run();
-//
-            MipsParser mipsParser = new MipsParser(sysBuilder.getModule());
+            //MipsParser mipsParser = new MipsParser(sysBuilder.getModule());
             String res = sysBuilder.getModule().print();
-            mipsParser.parseModule();
-            String finalres = mipsParser.toString();
+            //mipsParser.parseModule();
+            //String finalres = mipsParser.toString();
 
             //System.out.println(sysBuilder.getModule().print());
 
-
-            // 输出文件内容
-//
-            //Files.write(Path.of(outFilePath), res.getBytes(), StandardOpenOption.CREATE);
-            Files.write(Path.of(finalFilePath), finalres.getBytes(), StandardOpenOption.CREATE);
+            Files.write(Path.of(outFilePath), res.getBytes(), StandardOpenOption.CREATE);
+            //Files.write(Path.of(finalFilePath), finalres.getBytes(), StandardOpenOption.CREATE);
             //System.out.print(lexer.display());
         } catch (IOException e) {
             e.printStackTrace();
